@@ -1,3 +1,6 @@
+// Created by Vishal Naidu (GitHub: Vieper1) naiduvishal13@gmail.com | Vishal.Naidu@utah.edu
+// And Chilagani Rajesh | chilaganirajesh95@gmail.com 
+
 #include "Cosco_Socket_Character.h"
 #include "SocketConnection/SocketConnectionClient.h"
 #include "Engine/Engine.h"
@@ -34,6 +37,7 @@ void ACoscoSocketCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInp
 
 
 ////////////////////////////////////////////////////////////////////// BEGINPLAY & TICK
+// Connection to Rasp-Pi logic by Chilagani Rajesh
 void ACoscoSocketCharacter::BeginPlay()
 {
 	Super::BeginPlay();
@@ -74,27 +78,27 @@ void ACoscoSocketCharacter::Tick(float DeltaTime)
 					FString str = "";
 					for (size_t i = 0; i < BRead; i++)
 					{
+						// Map those 4 inputs coming from the Rasp-Pi
+						// To the Ship's AXIAL Camera inputs
 						switch (T[i])
 						{
-						case 49:
+						case 49:	// Input = '1'
 							Input_LookUpAtRate(1.f);
 							break;
-						case 50:
+						case 50:	// Input = '2'
 							Input_LookUpAtRate(-1.f);
 							break;
-						case 51:
+						case 51:	// Input = '3'
 							Input_TurnAtRate(1.f);
 							break;
-						case 52:
+						case 52:	// Input = '4'
 							Input_TurnAtRate(-1.f);
 							break;
 						}
 
 						str.Append(FString::Printf(TEXT("%c "), static_cast<char>(T[i])));
 						GEngine->AddOnScreenDebugMessage(-1, 0.1f, FColor::Red, str);
-						//UE_LOG(LogTemp, Warning, TEXT("%d"), T[i]);
 					}
-					//UE_LOG(LogTemp, Warning, TEXT("////////////////////////////////////////////////////////////\n\n"));
 				}
 			}
 		}

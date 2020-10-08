@@ -1,3 +1,6 @@
+// Created by Vishal Naidu (GitHub: Vieper1) naiduvishal13@gmail.com | Vishal.Naidu@utah.edu
+// And Chilagani Rajesh | chilaganirajesh95@gmail.com 
+
 #pragma once
 
 #include "CoreMinimal.h"
@@ -34,11 +37,12 @@ public:
 
 
 
-	
+	////////////////////////////////////////////////////////////////////// EVENTS
 protected:
 	virtual void BeginPlay() override;
 	virtual void Tick(float DeltaTime) override;
 	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
+	////////////////////////////////////////////////////////////////////// EVENTS
 
 
 
@@ -47,8 +51,7 @@ protected:
 
 
 
-
-	
+	////////////////////////////////////////////////////////////////////// CORE
 #pragma region Mesh & Spline
 	
 public:
@@ -68,6 +71,7 @@ private:
 		USplineComponent * SplineRef;
 
 #pragma endregion
+	////////////////////////////////////////////////////////////////////// CORE
 
 
 
@@ -81,15 +85,11 @@ private:
 
 
 
-
-	
+	////////////////////////////////////////////////////////////////////// SPLINE MOVEMENT
+	// Spline Riding Logic by Chilagani Rajesh
 #pragma region Spline & Movement Speed
 	//Spline & Movement Speed
 public:
-	FVector LastFakeVelocity;
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Gameplay)
-		FVector FakeVelocity;
-	
 	
 	UPROPERTY(BlueprintReadOnly, Category = Gameplay)
 		float               m_AmountToMove;
@@ -100,15 +100,24 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Gameplay)
 		float               m_DistanceAlongSpline;
 	UPROPERTY(EditAnywhere, Category = Gameplay)
-		float                m_LeanMultiplier;
-	UPROPERTY(EditAnywhere, Category = Gameplay)
-		float                m_LeanLerpSpeed;
-	UPROPERTY(EditAnywhere, Category = Gameplay)
-		float                m_LeanLimit;
-	UPROPERTY(EditAnywhere, Category = Gameplay)
-		bool                m_LoopOnSpline;
+		bool				m_LoopOnSpline;
+
 	
+	// Config for BIKE LIKE LEANING
+	// & LERPED SPLINE POSITIONING
+	UPROPERTY(EditAnywhere, Category = Gameplay)
+		float m_LeanMultiplier;
+	UPROPERTY(EditAnywhere, Category = Gameplay)
+		float m_LeanLerpSpeed;
+	UPROPERTY(EditAnywhere, Category = Gameplay)
+		float m_LeanLimit;
 	
+	// Variables that assist us to decide how much to lean
+	FVector LastFakeVelocity;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Gameplay)
+		FVector FakeVelocity;
+
+
 private:
 	FVector  m_VectorOnSpline;
 	FRotator m_RotationOnSpline;
@@ -116,6 +125,21 @@ private:
 	float m_CurrentLeanAngle;
 
 #pragma endregion
+	////////////////////////////////////////////////////////////////////// CORE
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 

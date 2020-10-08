@@ -1,3 +1,5 @@
+// Created by Vishal Naidu (GitHub: Vieper1) | naiduvishal13@gmail.com | Vishal.Naidu@utah.edu
+
 #include "GatlingProjectile.h"
 #include "BaseProjectile.h"
 #include "ACosco/Cosco_Base_Character.h"
@@ -55,6 +57,10 @@ void AGatlingProjectile::Tick(float DeltaTime)
 
 
 ////////////////////////////////////////////////////////////////////// Explode
+
+// Use standard BeginOverlap against the Gatling projectile
+// Since it's just a hit and do damage type projectile
+
 void AGatlingProjectile::OnBeginOverlap(
 	class UPrimitiveComponent* OverlappedComp,
 	class AActor* OtherActor,
@@ -65,7 +71,7 @@ void AGatlingProjectile::OnBeginOverlap(
 {
 	if (Cast<ABaseProjectile>(OtherActor)) return;
 
-
+	// Spawn particle
 	if (HitParticle)
 	{
 		FTransform spawnTransform = GetActorTransform();
@@ -73,6 +79,7 @@ void AGatlingProjectile::OnBeginOverlap(
 		UParticleSystemComponent* hitComp = UGameplayStatics::SpawnEmitterAtLocation(GetWorld(), HitParticle, spawnTransform, true, EPSCPoolMethod::AutoRelease);
 	}
 
+	// Deal damage
 	ACoscoBaseCharacter * baseCharacter = Cast<ACoscoBaseCharacter>(OtherActor);
 	if (baseCharacter)
 	{

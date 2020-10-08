@@ -1,3 +1,5 @@
+// Created by Vishal Naidu (GitHub: Vieper1) | naiduvishal13@gmail.com | Vishal.Naidu@utah.edu
+
 #include "Cosco_Weapons_Character.h"
 #include "Camera/CameraComponent.h"
 #include "Kismet/KismetMathLibrary.h"
@@ -63,6 +65,8 @@ void ACoscoWeaponsCharacter::Tick(float DeltaTime)
 ////////////////////////////////////////////////////////////////////// UTILITY
 FQuat ACoscoWeaponsCharacter::GetRandomForwardRotation(const FRotator MuzzleRotation, const float ConeAngle) const
 {
+	// Add random rotator over the forward
+	// To get the firing vector with error
 	const FRotator randRotation = UKismetMathLibrary::RandomRotator();
 	const FRotator randForwardRotation = UKismetMathLibrary::Multiply_RotatorFloat(randRotation, ConeAngle / 360.0f);
 	const FRotator muzzleRotationWithoutZ = FRotator(MuzzleRotation.Pitch, MuzzleRotation.Yaw, 0);
@@ -72,6 +76,9 @@ FQuat ACoscoWeaponsCharacter::GetRandomForwardRotation(const FRotator MuzzleRota
 
 void ACoscoWeaponsCharacter::GetSocketMeshReferences()	// To be called in BeginPlay()
 {
+	// Find and save references to
+	// All the Skeletal Meshes under under
+	// The root to form Turret data
 	for (FTurret & turret : Projectiles)
 	{
 		TArray<USceneComponent*> components;
@@ -100,15 +107,10 @@ void ACoscoWeaponsCharacter::GetSocketMeshReferences()	// To be called in BeginP
 
 
 ////////////////////////////////////////////////////////////////////// INPUT
-void ACoscoWeaponsCharacter::Input_FirePressed()
-{
-	//bIsFiring = true;
-}
 
-void ACoscoWeaponsCharacter::Input_FireReleased()
-{
-	//bIsFiring = false;
-}
+// Old firing method (Before individual gun separation)
+void ACoscoWeaponsCharacter::Input_FirePressed() { }
+void ACoscoWeaponsCharacter::Input_FireReleased() { }
 
 ////////////////////////////////////////////////////////////////////// INPUT
 
@@ -122,7 +124,11 @@ void ACoscoWeaponsCharacter::Input_FireReleased()
 
 
 /////////////////////////////////////////////////////////////////////// Fire
-void ACoscoWeaponsCharacter::Fire()			// We need to figure out a better way to do this
+/*
+* The original Generic-Weapon-Firing-logic
+* Looks through active weapons to fire the projectile from
+*/
+void ACoscoWeaponsCharacter::Fire()
 {
 	for (FTurret projectile : Projectiles)
 	{
@@ -157,22 +163,13 @@ void ACoscoWeaponsCharacter::Fire()			// We need to figure out a better way to d
 	}
 }
 
-void ACoscoWeaponsCharacter::FireManual(TSubclassOf<ABaseProjectile> ProjectileClass, const FVector SpawnLocation, const FRotator SpawnRotation)
-{
-	const FTransform spawnTransform = FTransform(SpawnRotation, SpawnLocation, FVector::OneVector);
-	ABaseProjectile * spawnedObject = GetWorld()->SpawnActorDeferred<ABaseProjectile>(ProjectileClass, spawnTransform, this, this, ESpawnActorCollisionHandlingMethod::AdjustIfPossibleButAlwaysSpawn);
-	if (spawnedObject)
-	{
-		spawnedObject->InstigatorActor = this;
-		UGameplayStatics::FinishSpawningActor(spawnedObject, spawnTransform);
-	}
-	else
-	{
-		UE_LOG(LogTemp, Warning, TEXT("Projectile failed to spawn! %hs @ %d"), __FILE__, __LINE__);
-		return;
-	}
-}
 
+
+// Gets the projectile data from the turrets list
+// And fires the respective projectile from the class mentioned in FTurret data
+//
+// Use deferred turret to set the owner so the projectile avoids our shield
+// Since shield is a separate actor attached to the ship on spawn
 void ACoscoWeaponsCharacter::FireManualWithTurret(const int projectileID)
 {
 	if (projectileID < 0 || projectileID > Projectiles.Num())
@@ -203,5 +200,25 @@ void ACoscoWeaponsCharacter::FireManualWithTurret(const int projectileID)
 
 	if (Projectiles[i].CameraShakeType)
 		GetWorld()->GetFirstPlayerController()->ClientPlayCameraShake(Projectiles[i].CameraShakeType, Projectiles[i].CameraShakeScale, ECameraAnimPlaySpace::CameraLocal);
+}
+
+
+
+// FULL MANUAL turret firing
+// Specify the spawn location and rotation to fire projectile from
+void ACoscoWeaponsCharacter::FireManual(TSubclassOf<ABaseProjectile> ProjectileClass, const FVector SpawnLocation, const FRotator SpawnRotation)
+{
+	const FTransform spawnTransform = FTransform(SpawnRotation, SpawnLocation, FVector::OneVector);
+	ABaseProjectile * spawnedObject = GetWorld()->SpawnActorDeferred<ABaseProjectile>(ProjectileClass, spawnTransform, this, this, ESpawnActorCollisionHandlingMethod::AdjustIfPossibleButAlwaysSpawn);
+	if (spawnedObject)
+	{
+		spawnedObject->InstigatorActor = this;
+		UGameplayStatics::FinishSpawningActor(spawnedObject, spawnTransform);
+	}
+	else
+	{
+		UE_LOG(LogTemp, Warning, TEXT("Projectile failed to spawn! %hs @ %d"), __FILE__, __LINE__);
+		return;
+	}
 }
 /////////////////////////////////////////////////////////////////////// Fire

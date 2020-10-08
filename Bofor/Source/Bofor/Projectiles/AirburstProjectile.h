@@ -1,4 +1,4 @@
-// Fill out your copyright notice in the Description page of Project Settings.
+// Created by Vishal Naidu (GitHub: Vieper1) | naiduvishal13@gmail.com | Vishal.Naidu@utah.edu
 
 #pragma once
 
@@ -27,12 +27,13 @@ protected:
 
 
 
-
+	////////////////////////////////////////////////////////////////////// CORE
 #pragma region Airburst
 	float time;
 	UPROPERTY(Category = Airburst, VisibleAnywhere, BlueprintReadOnly)
 		USphereComponent * BigCollider;
 #pragma endregion
+	////////////////////////////////////////////////////////////////////// CORE
 
 
 
@@ -40,6 +41,12 @@ protected:
 
 
 
+
+
+
+	////////////////////////////////////////////////////////////////////// CONFIG
+
+	// Use Remap value range to map the distance-based-damage-drop
 #pragma region Radial Damage
 	UPROPERTY(Category = "Radial Damage", EditAnywhere, BlueprintReadWrite)
 		float MaxDistance;
@@ -52,7 +59,7 @@ protected:
 	inline float CalcRadialDamage(const float distance) const;
 	TArray<AActor*> overlappingActors;
 #pragma endregion
-
+	////////////////////////////////////////////////////////////////////// CONFIG
 
 
 
@@ -63,12 +70,22 @@ protected:
 	
 	
 
-
+	////////////////////////////////////////////////////////////////////// DAMAGE
 #pragma region Explosion
+
+	// DELAYED EXPLOSION?
+
+	// If the airburst always explodes upon the outer collider's overlap,
+	// It'll EXPLODE PREMATURELY, leading to minimal damage
+	
+	// So I'm using explosion delay to set the airburst to explode N ms after
+	// If you've got good aim, you'd naturally see the explosion real close to the target
+
 	void Explode(const bool bForceExplode = false);
 	UPROPERTY(Category = Projectile, EditAnywhere, Blueprintreadwrite)
 		float ExplosionDelay;
 	UPROPERTY(Category = Projectile, EditAnywhere, Blueprintreadwrite)
 		float ExplosionScale;
 #pragma endregion
+	////////////////////////////////////////////////////////////////////// DAMAGE
 };

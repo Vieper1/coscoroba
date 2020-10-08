@@ -1,4 +1,4 @@
-// Fill out your copyright notice in the Description page of Project Settings.
+// Created by Vishal Naidu (GitHub: Vieper1) | naiduvishal13@gmail.com | Vishal.Naidu@utah.edu
 
 #pragma once
 
@@ -32,6 +32,8 @@ protected:
 	UPROPERTY(Category = "Projectile", EditAnywhere, BlueprintReadWrite)
 		float HitParticleScale;
 	
+
+	// Use standard BeginOverlap against the inner collider
 	UFUNCTION(BlueprintCallable)
 		void OnBeginOverlap(
 			class UPrimitiveComponent* OverlappedComp,

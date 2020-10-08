@@ -1,4 +1,4 @@
-// Fill out your copyright notice in the Description page of Project Settings.
+// Created by Vishal Naidu (GitHub: Vieper1) | naiduvishal13@gmail.com | Vishal.Naidu@utah.edu
 
 #include "BaseProjectile.h"
 #include "GameFramework/ProjectileMovementComponent.h"
@@ -13,13 +13,21 @@ ABaseProjectile::ABaseProjectile()
 {
 	PrimaryActorTick.bCanEverTick = true;
 
+	// Attach Sphere collider here but override the overlap events in the children
+	// Not assigning it here since not all projectiles are going to use it
+
+	// E.g. Gatling projectile will fire the event on Hit/Overlap
+	// 		But the airburst will explode from a distance using a bigger outer collider
+
 	SphereCollision = CreateDefaultSubobject<USphereComponent>(FName("SphereCollision"));
 	SphereCollision->SetCollisionProfileName(FName("OverlapAll"));
 	RootComponent = SphereCollision;
 
+	// Trails
 	TrailParticle = CreateDefaultSubobject<UParticleSystemComponent>(FName("TrailParticle"));
 	TrailParticle->SetupAttachment(SphereCollision);
 
+	// Spawn & set projectile movement settings
 	ProjectileMovementComponent = CreateDefaultSubobject<UProjectileMovementComponent>(FName("Projectile"));
 	if (ProjectileMovementComponent)
 	{

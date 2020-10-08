@@ -1,3 +1,6 @@
+// Created by Vishal Naidu (GitHub: Vieper1) | naiduvishal13@gmail.com | Vishal.Naidu@utah.edu
+// And Chilagani Rajesh | chilaganirajesh95@gmail.com 
+
 #pragma once
 
 #include "CoreMinimal.h"
@@ -24,7 +27,7 @@ protected:
 
 
 
-	
+	// Configs for socket connection to Raspberry-Pi
 public:
 	FSocket * m_Socket;
 	uint8 * m_Data;
