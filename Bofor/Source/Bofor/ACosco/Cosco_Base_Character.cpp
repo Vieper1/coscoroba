@@ -73,8 +73,7 @@ void ACoscoBaseCharacter::Tick(float DeltaTime)
 	// Since our character is a Spline Rider (Teleporter) he doesn't have a PhysicsVelocity
 	// Use last and current position to get a FakeVelocity
 	
-	// Do a LateUpdate on the FakeVelocity so you can tell if there's been a change in direction
-	// Use the delta to make the ship lean like a bike
+	// Use FakeVelocity from Current & Last Frame to get delta
 
 	const FVector CurrentPosition = GetActorLocation();
 	LastFakeVelocity = FakeVelocity;
